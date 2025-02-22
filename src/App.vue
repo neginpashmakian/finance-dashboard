@@ -1,7 +1,7 @@
 <template>
   <v-app :dark="darkMode">
     <v-app-bar app :color="darkMode ? 'grey darken-4' : 'blue darken-3'" dark>
-      <v-toolbar-title>SkiResult Dashboard</v-toolbar-title>
+      <v-toolbar-title>Kiresult Dashboard</v-toolbar-title>
       <v-spacer></v-spacer>
 
       <!-- Dark Mode Toggle -->
