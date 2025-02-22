@@ -2,8 +2,8 @@
   <v-container>
     <ExpenseTable
       :expenses="filteredExpenses"
-      :searchVendor.sync="searchVendor"
-      :searchGL.sync="searchGL"
+      :searchVendors.sync="searchVendors"
+      :searchGLAccount.sync="searchGLAccount"
     />
     <ExpenseChart :expenses="filteredExpenses" />
   </v-container>
@@ -19,21 +19,22 @@ export default {
   data() {
     return {
       expenses: data,
-      searchVendor: "",
-      searchGL: "",
+      searchVendors: [],
+      searchGLAccount: null,
     };
   },
   computed: {
     filteredExpenses() {
-      return this.expenses.filter(
-        (exp) =>
-          (this.searchVendor
-            ? exp.vendor.toLowerCase().includes(this.searchVendor.toLowerCase())
-            : true) &&
-          (this.searchGL
-            ? exp.gl_account.toLowerCase().includes(this.searchGL.toLowerCase())
-            : true)
-      );
+      return this.expenses.filter((exp) => {
+        const vendorMatch =
+          this.searchVendors.length === 0 ||
+          this.searchVendors.includes(exp.vendor);
+
+        const glAccountMatch =
+          !this.searchGLAccount || exp.gl_account === this.searchGLAccount;
+
+        return vendorMatch && glAccountMatch;
+      });
     },
   },
 };

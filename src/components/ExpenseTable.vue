@@ -1,31 +1,41 @@
 <template>
   <v-container>
-    <!-- Filters -->
-    <v-card class="pa-4 mb-6 elevation-2">
-      <v-card-title>Filter Expenses</v-card-title>
+    <!-- Advanced Filters -->
+    <v-card class="pa-4 mb-6 elevation-3 filter-card">
+      <v-card-title class="blue--text font-weight-bold">
+        <v-icon class="mr-2">mdi-filter-variant</v-icon>
+        Filter Expenses
+      </v-card-title>
       <v-card-text>
         <v-row>
+          <!-- Multi-Select for Vendor -->
           <v-col cols="12" md="6">
-            <v-text-field
-              :value="searchVendor"
-              label="Filter by Vendor"
-              clearable
+            <v-autocomplete
+              v-model="selectedVendors"
+              :items="uniqueVendors"
+              label="Filter by Vendors"
+              multiple
               outlined
               dense
+              clearable
               color="blue"
-              @input="$emit('update:searchVendor', $event)"
-            ></v-text-field>
+              prepend-inner-icon="mdi-magnify"
+              @change="$emit('update:searchVendors', selectedVendors)"
+            ></v-autocomplete>
           </v-col>
+
+          <!-- Dropdown for GL Account -->
           <v-col cols="12" md="6">
             <v-select
-              :value="searchGL"
+              v-model="selectedGLAccount"
               label="Filter by GL Account"
               :items="uniqueGLAccounts"
               clearable
               outlined
               dense
               color="blue"
-              @change="$emit('update:searchGL', $event)"
+              prepend-inner-icon="mdi-menu-down"
+              @change="$emit('update:searchGLAccount', selectedGLAccount)"
             ></v-select>
           </v-col>
         </v-row>
@@ -52,7 +62,7 @@
             >
               <td>{{ item.vendor }}</td>
               <td>{{ item.gl_account }}</td>
-              <td class="font-weight-bold blue--text">{{ item.amount }} €</td>
+              <td>{{ item.amount }} €</td>
             </tr>
           </template>
         </v-data-table>
@@ -63,40 +73,44 @@
 
 <script>
 export default {
-  props: ["expenses", "searchVendor", "searchGL"],
+  props: ["expenses", "searchVendors", "searchGLAccount"],
   data() {
     return {
+      selectedVendors: [],
+      selectedGLAccount: null,
       pagination: {
         page: 1,
-        itemsPerPage: 5, // Ensures pagination works
+        itemsPerPage: 5,
       },
     };
   },
   computed: {
     headers() {
       return [
-        {
-          text: "Vendor",
-          value: "vendor",
-          class: "blue--text font-weight-bold",
-        },
-        {
-          text: "GL Account",
-          value: "gl_account",
-          class: "blue--text font-weight-bold",
-        },
-        {
-          text: "Total Amount (EUR)",
-          value: "amount",
-          class: "blue--text font-weight-bold",
-        },
+        { text: "Vendor", value: "vendor" },
+        { text: "GL Account", value: "gl_account" },
+        { text: "Amount (EUR)", value: "amount" },
       ];
     },
+    uniqueVendors() {
+      return Array.from(new Set(this.expenses.map((exp) => exp.vendor)));
+    },
     uniqueGLAccounts() {
-      // Extract unique GL Account names for the dropdown
-      const glAccounts = new Set(this.expenses.map((exp) => exp.gl_account));
-      return Array.from(glAccounts);
+      return Array.from(new Set(this.expenses.map((exp) => exp.gl_account)));
     },
   },
 };
 </script>
+
+<style scoped>
+/* Fancy Filter Card */
+.filter-card {
+  border-radius: 12px;
+  background: #ebfcff;
+}
+
+/* Style Table Rows */
+tr {
+  height: 50px;
+}
+</style>
