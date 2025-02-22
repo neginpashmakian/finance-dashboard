@@ -1,26 +1,47 @@
 <template>
-  <v-app>
-    <!-- Navbar -->
-    <v-app-bar app color="blue darken-3" dark elevation="4">
-      <v-toolbar-title>kiresult Dashboard</v-toolbar-title>
+  <v-app :dark="darkMode">
+    <v-app-bar app :color="darkMode ? 'grey darken-4' : 'blue darken-3'" dark>
+      <v-toolbar-title>SkiResult Dashboard</v-toolbar-title>
       <v-spacer></v-spacer>
-      <v-btn text>Home</v-btn>
-      <v-btn text>Reports</v-btn>
-      <v-btn text>Settings</v-btn>
+
+      <!-- Dark Mode Toggle -->
+      <v-switch
+        v-model="darkMode"
+        inset
+        hide-details
+        label="Dark Mode"
+        @change="toggleTheme"
+      ></v-switch>
     </v-app-bar>
 
+    <!-- Main Content -->
     <v-main>
       <v-container>
-        <DashboardView />
+        <DashboardView :darkMode="darkMode" />
       </v-container>
     </v-main>
   </v-app>
 </template>
 
 <script>
-import DashboardView from "./views/DashboardView.vue";
+import DashboardView from "@/views/DashboardView.vue";
 
 export default {
   components: { DashboardView },
+  data() {
+    return {
+      darkMode: localStorage.getItem("darkMode") === "true",
+    };
+  },
+  watch: {
+    darkMode(value) {
+      localStorage.setItem("darkMode", value);
+    },
+  },
+  methods: {
+    toggleTheme() {
+      this.$vuetify.theme.dark = this.darkMode;
+    },
+  },
 };
 </script>

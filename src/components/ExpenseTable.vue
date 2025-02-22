@@ -1,7 +1,10 @@
 <template>
   <v-container>
-    <!-- Advanced Filters -->
-    <v-card class="pa-4 mb-6 elevation-3 filter-card">
+    <!-- Filter Section -->
+    <v-card
+      class="pa-4 mb-6 elevation-3 filter-card"
+      :class="{ 'dark-theme': darkMode }"
+    >
       <v-card-title class="blue--text font-weight-bold">
         <v-icon class="mr-2">mdi-filter-variant</v-icon>
         Filter Expenses
@@ -42,8 +45,8 @@
       </v-card-text>
     </v-card>
 
-    <!-- Table with Pagination -->
-    <v-card elevation="3">
+    <!-- Table Section -->
+    <v-card elevation="3" :class="{ 'dark-theme': darkMode }">
       <v-card-title>Expenses by Vendor</v-card-title>
       <v-card-text>
         <v-data-table
@@ -53,11 +56,19 @@
           :options.sync="pagination"
           class="elevation-1"
           dense
+          :class="{ 'dark-table': darkMode }"
         >
           <template v-slot:item="{ item, index }">
             <tr
               :style="{
-                backgroundColor: index % 2 === 0 ? '#E3F2FD' : '#FFFFFF',
+                backgroundColor: darkMode
+                  ? index % 2 === 0
+                    ? '#2a2a2a'
+                    : '#1e1e1e' /* Darker Gray */
+                  : index % 2 === 0
+                  ? '#E3F2FD'
+                  : '#FFFFFF',
+                color: darkMode ? '#e0e0e0' : '#000000',
               }"
             >
               <td>{{ item.vendor }}</td>
@@ -73,7 +84,7 @@
 
 <script>
 export default {
-  props: ["expenses", "searchVendors", "searchGLAccount"],
+  props: ["expenses", "searchVendors", "searchGLAccount", "darkMode"],
   data() {
     return {
       selectedVendors: [],
@@ -103,13 +114,16 @@ export default {
 </script>
 
 <style scoped>
-/* Fancy Filter Card */
-.filter-card {
-  border-radius: 12px;
-  background: #ebfcff;
+/* Dark Theme Styles */
+.dark-theme {
+  background-color: #121212 !important;
+  color: white !important;
 }
 
-/* Style Table Rows */
+.dark-table {
+  background-color: #1e1e1e !important;
+}
+
 tr {
   height: 50px;
 }
