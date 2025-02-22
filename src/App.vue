@@ -2,7 +2,7 @@
   <v-app>
     <!-- Navbar -->
     <v-app-bar app color="blue darken-3" dark elevation="4">
-      <v-toolbar-title>kiResult Dashboard</v-toolbar-title>
+      <v-toolbar-title>kiresult Dashboard</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn text>Home</v-btn>
       <v-btn text>Reports</v-btn>
